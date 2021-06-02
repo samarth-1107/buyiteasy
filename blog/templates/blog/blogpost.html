@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+{% block title %}{{post.title}} - BuyItEasy Blogs {% endblock %}
+<!-- {% load static %} -->
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="text-center">{{post.title}}</h2>
+            <p class="text-center">Category : <a href="#">{{post.category}}</a></p>
+            <p class="">{{post.pub_date}} by <a href="#">{{post.author_name}}</a></p>
+            <hr>
+            <article class="blog-post">
+                <p>{{post.content1}}</p>
+                <h5>{{post.sub_heading1}}</h4>
+                <p>{{post.content2}}</p>
+                <h5>{{post.sub_heading2}}</h4>
+                <p>{{post.content3}}</p>
+                <div class="fb-like my-2" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-layout="standard" data-action="like" data-size="large" data-share="true"></div>
+                <div class="fb-comments" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-numposts="5"></div>
+              <nav class="blog-pagination" aria-label="Pagination">
+                <a class="btn btn-outline-primary" href="/blog">Go Back</a>
+            </nav>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="font-italic">About</h4>
+                <p class="mb-0">BuyItEasy is India's leading E-commerce platform. Visit the shop to buy products.
+                    Exciting offers are waiting for you.</p>
+            </div>
+            <div class="p-4">
+                <h4 class="font-italic">Follow us on :</h4>
+                <ol class="list-unstyled">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ol>
+            </div>
+        </div>
+
+    </div><!-- /.row -->
+</div>
+{% endblock %}

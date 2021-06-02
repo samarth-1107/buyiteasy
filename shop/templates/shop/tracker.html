@@ -1,0 +1,109 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{%static 'shop/css/style.css'%}">
+{% endblock %}
+
+{% block title %}Tracker - BuyItEasy{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="col">
+        <h2>BuyItEasy Tracker - Track Your Orders</h2>
+        <h5 class="my-4">Enter the details and track your orders</h5>
+        <form class="my-3" method="POST" action="#" id="trackerForm">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="validationServerUsername">Enter Order ID</label>
+                    <input type="text" class="form-control" id="orderId" name="orderId" placeholder="12345">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="validationServer01">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="example@xyz.com">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-warning my-4"><svg xmlns="http://www.w3.org/2000/svg" width="30"
+                    height="30" fill="currentColor" class="bi bi-truck mx-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                </svg>Track Order</button>
+        </form>
+
+    </div>
+    <div id="dispForm" class="col my-5">
+        <h2>Tracking Status :</h2>
+         <div class="my-3">
+            <ul class="list-group" id="items">
+                <div class="list-group">
+                    <a href="/shop" class="list-group-item list-group-item-action list-group-item-danger"><b>You have
+                            not placed any orders!</b> Click here to add products and place your order.</a>
+                </div>
+            </ul>
+        </div>
+        <div class="my-3">
+            <h2>Your Orders :</h2>
+            <ul class="list-group" id="citems">
+                <div class="list-group">
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    $('#trackerForm').submit(function (event) {
+        $('#items').empty();
+        var formData = {
+            'orderId': $('input[name=orderId]').val(),
+            'email': $('input[name=email]').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+            .done(function (data) {
+                $('#citems').empty();
+                data=JSON.parse(data);
+                if (data['status'] == 'success') {
+                    updates = data['updates'];
+                    for (i = 0; i < updates.length; i++) {
+                        let text = updates[i]['text'];
+                        let time = updates[i]['time'];
+                        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${text}
+                        <span class="badge badge-success badge-pill">${time}</span>
+                        </li>`
+                        $('#items').append(mystr);
+                    }
+                    //FILL IN ORDER DETAILS
+                    cart= JSON.parse(data['itemsJson']);
+                    for (item in cart) {
+                        let prodName = cart[item][1];
+                        let qty = cart[item][0];
+                        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${prodName}
+                        <span class="badge badge-primary badge-pill">${qty}</span>
+                        </li>`
+                        $('#citems').append(mystr);
+                    }
+                }  
+                else {
+                    mystr = `<li class="list-group-item list-group-item-action list-group-item-danger">
+                    <b>Sorry!</b> We are not able to fetch this Order ID and Email. Make sure to that the details provided are correct.</li>`
+                    $('#items').append(mystr);
+                    
+                }
+                
+            });
+        event.preventDefault();
+    });
+</script>
+{% endblock %}

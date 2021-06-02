@@ -1,0 +1,63 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- BuyItEasy CSS -->
+  <link href="{% static 'css/cover.css'%}" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <title>BuyItEasy - India's best E-commerce Platform</title>
+  <link src="{% static 'shop/images/icon.png' %}" rel="icon" type="image/png">
+</head>
+<body class="d-flex vh-100 text-center text-white bg-dark">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+      <div>
+        <h3 class="float-md-start  mb-0">BuyItEasy</h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+          <a class="nav-link" aria-current="page" href="#">Home</a>
+          <a class="nav-link" href="/shop/about">About</a>
+          <a class="nav-link" href="/shop/contact">Contact</a>
+          <a class="nav-link" href="/blog">Blogs</a>
+        </nav>
+      </div>
+    </header>
+    <!-- Main Body -->
+    <main class="px-3">
+      <div class="jumbotron">
+        <h1 class="display-4"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+          <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+          <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+        </svg></h1>
+        {% if user.is_authenticated %}
+        <span>Hello, {{request.user.first_name}}!</span>
+        {% else %}
+        <nav class="nav nav-masthead justify-content-center float-md-center">
+          <a class="nav-link font-weight-bold" href="/signinpage">Sign In</a>
+          <a class="nav-link font-weight-bold" href="/signinpage">Register</a>
+        </nav>
+        {% endif %}
+      </div>
+      <div class="jumbotron my-5">
+        <h2 class="display-4"><b>Welcome to BuyItEasy!!</b></h2>
+        <p class="lead">India's leading E-commerce platform.</p>
+        <hr class="my-4">
+        <p>Kharido Asani Se..!!<p>
+        
+        <p class="lead">
+          <a class="btn btn-warning btn-lg mx-2" href="/shop" role="button">Visit Shop</a>
+        </p>
+      </div>
+    </main>
+   <!-- Footer -->
+    <footer class="mt-auto text-white-50">
+      <p>Copyright © 2020 | All Rights Reserved | <a href="https://getbootstrap.com/" class="text-white"> BuyItEasy</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

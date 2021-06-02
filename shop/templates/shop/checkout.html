@@ -1,0 +1,143 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{%static 'shop/css/style.css'%}">
+{% endblock %}
+{% block title %}Checkout{% endblock %}
+{% block body %}
+<div class="container">
+    <div id="successCheckout" >
+    </div>
+    <div id="reviewCart" class="col">
+        <h2>Step 1 : Review Your Cart Items</h2>
+        <div class="my-5">
+            <ul class="list-group" id="items">
+
+            </ul>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mt-3">
+                    <li class="breadcrumb-item active " aria-current="page"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-tags-fill " viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M3 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 7.586 1H3zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        <path d="M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z"/>
+                      </svg><b class="mx-1">₹</b><b id="totalPrice"></b>/-</li>
+                </ol>
+            </nav>
+           
+        </div>
+    </div>
+    <div id="dispForm" class="col my-5">
+        <h2>Step 2 : Enter Details & Place Order</h2>
+        <form class="my-5" method="POST" action="/shop/checkout/">
+            {% csrf_token %}
+            <input type="hidden" name="items_json" id="items_json">
+            <input type="hidden" name="the_amount" id="the_amount">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="validationServerUsername">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Martha Antony">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="validationServer01">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="example@xyz.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="validationServer02">Address Line 1</label>
+                    <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="validationServer03">Address Line 2</label>
+                    <input type="text" class="form-control" id="address2" name="address2"
+                        placeholder="Landmark, Apartment, Shop">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="validationServer04">Phone No.</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="89898 98989">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="validationServer05">City</label>
+                    <input type="text" class="form-control" id="city" name="city" placeholder="Mumbai">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="inputState">State</label>
+                    <input type="text" class="form-control" id="state" name="state" placeholder="Maharashtra">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="inputCountry">Country</label>
+                    <input type="text" class="form-control" id="country" name="country" placeholder="India">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Pin</label>
+                    <input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="000000">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-warning my-4"><svg xmlns="http://www.w3.org/2000/svg" width="25"
+                    height="25" fill="currentColor" class="bi bi-check2-square mr-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M15.354 2.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L8 9.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                    <path fill-rule="evenodd"
+                        d="M1.5 13A1.5 1.5 0 0 0 3 14.5h10a1.5 1.5 0 0 0 1.5-1.5V8a.5.5 0 0 0-1 0v5a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 0 0-1H3A1.5 1.5 0 0 0 1.5 3v10z" />
+                </svg>Place Order</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+
+
+    } else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+    };
+    var sum = 0;
+    var totalPrice=0;
+    if ($.isEmptyObject(cart)) {
+        mystr = `<div class="list-group">
+            <a href="/shop" class="list-group-item list-group-item-action list-group-item-danger"><b>Your cart is empty! </b> Please add products before checking out.</a>
+            </div>
+            <a href="/shop"><button class="btn btn-warning my-2" type="button">Add Products</button></a>`
+        document.getElementById("dispForm").style.display = "none";
+
+        $('#items').append(mystr);
+    }
+    else {
+        for (item in cart) {
+            let prodName = cart[item][1];
+            let qty = cart[item][0];
+            let itemPrice=cart[item][2]
+            sum = sum + qty;
+            totalPrice = totalPrice + qty*parseInt(itemPrice);
+            
+            mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                ${prodName}
+                <span class="badge badge-primary badge-pill">${qty}</span>
+                </li>
+                `
+            $('#items').append(mystr);
+        }
+    }
+    document.getElementById('cart').innerHTML = sum;
+    document.getElementById('totalPrice').innerHTML = totalPrice;
+    $('#items_json').val(JSON.stringify(cart));
+    {% if thank %}
+    document.getElementById(`successCheckout`).innerHTML=`<ul class="list-group">
+        <li class="list-group-item list-group-item-success"><b>Your order has been placed succesfully..!</b></li>
+     </ul>
+     <p class="lead">
+        <a class="btn btn-warning btn-lg my-3" href="/shop" role="button">Continue Shopping</a>
+    </p> `
+    document.getElementById(`dispForm`).style.display="none";
+    document.getElementById(`reviewCart`).style.display="none";
+    localStorage.clear();
+    {% endif %}
+    $('#the_amount').val($('#totalPrice').html());
+</script>
+{% endblock %}

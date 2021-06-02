@@ -1,0 +1,89 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{%static 'shop/css/style.css'%}">
+{% endblock %}
+{% block title %}Contact Us{% endblock %}
+{%block body%}
+<div class="container my-4">
+    <div id="successContact" >
+    </div>
+    <h4 id="contactHeading">Contact Us Regarding Any Querry!!</h4>
+    <form id="contactForm" action="/shop/contact/" method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="mb-3 my-4">
+            <label for="validationCustom01" class="form-label">Full Name</label>
+            <input name="name" type="text" class="form-control" id="validationCustom01" placeholder="Martha Antony" required>
+            <div class="invalid-feedback">
+                This field cannot be empty!
+            </div>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input name="email" type="email" class="form-control" id="validationCustom01" placeholder="name@example.com" required>
+            <div class="invalid-feedback">
+                This field cannot be empty!
+            </div>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Phone No.</label>
+            <input name="phone" type="phone" class="form-control" id="validationCustom01" placeholder="+91 89898 98989" required>
+            <div class="invalid-feedback">
+                This field cannot be empty!
+            </div>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Your querry..</label>
+            <textarea name="desc" class="form-control" id="validationCustom01" rows="5" required></textarea>
+            <div class="invalid-feedback">
+                This field cannot be empty!
+            </div>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="my-4">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+</div>
+<!-- VALIDATION FORM -->
+
+{% endblock %}
+{% block js %}
+<script>
+// Form Validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+  
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+// Django Messages
+{% if thank %}
+    document.getElementById(`successContact`).innerHTML=`<ul class="list-group">
+    <li class="list-group-item list-group-item-success"><b>Thankyou for contacting us!!</b> We'll get back to you soon.</li>
+    </ul>`
+    document.getElementById(`contactForm`).style.display="none";
+    document.getElementById(`contactHeading`).style.display="none";
+{% endif %}
+</script>
+{% endblock %}
